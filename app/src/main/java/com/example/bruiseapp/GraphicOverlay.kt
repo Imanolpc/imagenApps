@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import com.google.mlkit.vision.face.Face
+import com.google.mlkit.vision.face.FaceContour
 import kotlin.random.Random
 
 class GraphicOverlay(context: Context, attrs: AttributeSet?) : View(context, attrs) {
@@ -60,9 +61,9 @@ class GraphicOverlay(context: Context, attrs: AttributeSet?) : View(context, att
                 val faceGraphic = graphics.firstOrNull { it is FaceGraphic } as? FaceGraphic
                 faceGraphic?.let {
                     val face = it.face
-                    val randomPoint = face.allPoints.randomOrNull()
+                    val randomPoint = face.getContour(FaceContour.FACE)?.points?.randomOrNull()
                     if (randomPoint != null) {
-                        bruises.add(Bruise(this, randomPoint.position.x, randomPoint.position.y, intensity))
+                        bruises.add(Bruise(this, randomPoint.x, randomPoint.y, intensity))
                     }
                 }
             }
