@@ -186,7 +186,7 @@ private class FaceAnalyzer(
     private val detector = FaceDetection.getClient(highAccuracyOpts)
 
     @androidx.camera.core.ExperimentalGetImage
-    override fun analyze(imageProxy: ImageAnalysis.ImageProxy) {
+    override fun analyze(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
         if (mediaImage != null) {
             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
