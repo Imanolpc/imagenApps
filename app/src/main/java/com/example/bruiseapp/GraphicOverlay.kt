@@ -14,7 +14,6 @@ import kotlin.random.Random
 class GraphicOverlay(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     private val graphics: MutableList<Graphic> = mutableListOf()
-    private val bruises: MutableList<Bruise> = mutableListOf()
     private val lock = Any()
 
     abstract class Graphic(private val overlay: GraphicOverlay) {
@@ -57,14 +56,13 @@ class GraphicOverlay(context: Context, attrs: AttributeSet?) : View(context, att
 
     fun addBruise(intensity: Float) {
         synchronized(lock) {
-            if (graphics.isNotEmpty()) {
-                val faceGraphic = graphics.firstOrNull { it is FaceGraphic } as? FaceGraphic
-                faceGraphic?.let {
-                    val face = it.face
-                    val randomPoint = face.getContour(FaceContour.FACE)?.points?.randomOrNull()
-                    if (randomPoint != null) {
-                        bruises.add(Bruise(this, randomPoint.x, randomPoint.y, intensity))
-                    }
+            val faceGraphic = graphics.firstOrNull { it is FaceGraphic } as? FaceGraphic
+            faceGraphic?.let {
+                val face = it.face
+                val randomPoint = face.getContour(FaceContour.FACE)?.points?.randomOrNull()
+                if (randomPoint != null) {
+                    val bruise = Bruise(this, randomPoint.x, randomPoint.y, intensity)
+                    add(bruise)
                 }
             }
         }
@@ -77,9 +75,6 @@ class GraphicOverlay(context: Context, attrs: AttributeSet?) : View(context, att
         synchronized(lock) {
             for (graphic in graphics) {
                 graphic.draw(canvas)
-            }
-            for (bruise in bruises) {
-                bruise.draw(canvas)
             }
         }
     }
@@ -125,11 +120,11 @@ class FaceGraphic(overlay: GraphicOverlay, val face: Face) : GraphicOverlay.Grap
 }
 
 class Bruise(
-    private val overlay: GraphicOverlay,
+    overlay: GraphicOverlay,
     private val x: Float,
     private val y: Float,
     private val intensity: Float
-) {
+) : GraphicOverlay.Graphic(overlay) {
     private val paint = Paint()
     private val size: Float
 
@@ -139,9 +134,9 @@ class Bruise(
         size = intensity * 0.5f
     }
 
-    fun draw(canvas: Canvas) {
-        val scaledX = overlay.translateX(x)
-        val scaledY = overlay.translateY(y)
+    override fun draw(canvas: Canvas) {
+        val scaledX = translateX(x)
+        val scaledY = translateY(y)
         canvas.drawCircle(scaledX, scaledY, size, paint)
     }
 }
