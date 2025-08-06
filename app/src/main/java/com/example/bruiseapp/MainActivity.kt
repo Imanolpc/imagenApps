@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             } else {
                 CameraSelector.DEFAULT_BACK_CAMERA
             }
+            graphicOverlay.isFrontFacing = cameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA
             startCamera()
         }
     }
