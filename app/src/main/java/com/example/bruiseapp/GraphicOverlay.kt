@@ -103,19 +103,33 @@ class FaceGraphic(overlay: GraphicOverlay, val face: Face) : GraphicOverlay.Grap
     }
 
     override fun draw(canvas: Canvas) {
-        val face = this.face ?: return
-
-        val x = translateX(face.boundingBox.centerX().toFloat())
-        val y = translateY(face.boundingBox.centerY().toFloat())
-
-        // Draws a bounding box around the face.
-        val xOffset = scaleX(face.boundingBox.width() / 2.0f)
-        val yOffset = scaleY(face.boundingBox.height() / 2.0f)
-        val left = x - xOffset
-        val top = y - yOffset
-        val right = x + xOffset
-        val bottom = y + yOffset
-        canvas.drawRect(left, top, right, bottom, facePositionPaint)
+        val contour = face.getContour(FaceContour.FACE)
+        if (contour != null) {
+            val points = contour.points
+            for (i in 0 until points.size - 1) {
+                val startPoint = points[i]
+                val endPoint = points[i + 1]
+                canvas.drawLine(
+                    translateX(startPoint.x),
+                    translateY(startPoint.y),
+                    translateX(endPoint.x),
+                    translateY(endPoint.y),
+                    facePositionPaint
+                )
+            }
+            // Draw a line from the last point to the first point to close the contour
+            if (points.isNotEmpty()) {
+                val firstPoint = points.first()
+                val lastPoint = points.last()
+                canvas.drawLine(
+                    translateX(lastPoint.x),
+                    translateY(lastPoint.y),
+                    translateX(firstPoint.x),
+                    translateY(firstPoint.y),
+                    facePositionPaint
+                )
+            }
+        }
     }
 }
 
