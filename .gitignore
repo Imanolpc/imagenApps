@@ -1,0 +1,37 @@
+# Gradle files
+.gradle/
+build/
+# Local properties
+local.properties
+# IDE files
+.idea/
+*.iml
+# Keystore files
+*.jks
+*.keystore
+# Log files
+*.log
+# Captures
+captures/
+# Misc
+.DS_Store
+# Android Studio
+.idea/
+.idea/caches/
+.idea/libraries/
+.idea/misc.xml
+.idea/modules.xml
+.idea/runConfigurations/
+.idea/vcs.xml
+.idea/workspace.xml
+# Built application files
+*.apk
+*.aab
+# Files for the ART/Dalvik VM
+*.dex
+# Built C/C++ files
+**/build/
+**/build/
+**/build/
+# Android Studio Profiler
+*.hprof
